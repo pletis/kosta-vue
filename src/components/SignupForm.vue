@@ -11,9 +11,14 @@
           <input id="user_phoneNum" type="text" v-model="user_phoneNum" />
         </div>
         <div>
-          <label for="user_email">이메일: </label>
+          <label for="user_email">이메일:</label>
           <input id="user_email" type="text" v-model="user_email" />
         </div>
+        <p class="validation-text">
+          <span class="warning" v-if="!isUsernameValid && user_email">
+            이메일 형식이 아닙니다
+          </span>
+        </p>
         <div>
           <label for="user_pw">패스워드: </label>
           <input id="user_pw" type="text" v-model="user_pw" />
@@ -35,6 +40,7 @@
 
 <script>
 import { registerUser } from "@/api/index";
+import { validateEmail } from "@/utils/validation";
 
 export default {
   data() {
@@ -49,6 +55,11 @@ export default {
       // log
       logMessage: "",
     };
+  },
+  computed: {
+    isUsernameValid() {
+      return validateEmail(this.user_email);
+    },
   },
   methods: {
     async submitForm() {

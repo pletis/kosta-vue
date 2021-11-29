@@ -3,20 +3,20 @@
     <div class="form-wrapper form-wrapper-sm">
       <form @submit.prevent="submitForm" class="form">
         <div>
-          <label for="user_name">이메일:</label>
-          <input id="user_name" type="text" v-model="user_name" />
+          <label for="username">이메일:</label>
+          <input id="username" type="text" v-model="username" />
           <p class="validation-text">
-            <span class="warning" v-if="!isUsernameValid && user_name">
+            <span class="warning" v-if="!isUsernameValid && username">
               이메일 형식이 아닙니다
             </span>
           </p>
         </div>
         <div>
-          <label for="user_pw">비밀번호:</label>
-          <input id="user_pw" type="text" v-model="user_pw" />
+          <label for="password">비밀번호:</label>
+          <input id="password" type="text" v-model="password" />
         </div>
         <button
-          :disabled="!isUsernameValid || !user_pw"
+          :disabled="!isUsernameValid || !password"
           type="submit"
           class="btn"
         >
@@ -36,15 +36,15 @@ export default {
   data() {
     return {
       // form values
-      user_name: "",
-      user_pw: "",
+      username: "",
+      password: "",
       // log
       logMessage: "",
     };
   },
   computed: {
     isUsernameValid() {
-      return validateEmail(this.user_name);
+      return validateEmail(this.username);
     },
   },
   methods: {
@@ -52,25 +52,26 @@ export default {
       try {
         // 비즈니스 로직
         const userData = {
-          user_name: this.user_name,
-          user_pw: this.user_pw,
+          // 서버랑 이름 같게 해줘야 함
+          user_email: this.username,
+          user_pw: this.password,
         };
         const { data } = await loginUser(userData);
-        console.log(data.user.user_name);
-        this.logMessage = `${data.user.user_name} 님 환영합니다`;
-        // this.initForm();
+        this.$store.commit("setUsername", this.username);
+        console.log(data);
+        // this.logMessage = `${data}`;
+        this.$router.push("/main");
       } catch (error) {
         // 에러 핸들링할 코드
         console.log(error.response.data);
         this.logMessage = error.response.data;
-        // this.initForm();
       } finally {
         this.initForm();
       }
     },
     initForm() {
-      this.user_name = "";
-      this.user_pw = "";
+      this.username = "";
+      this.password = "";
     },
   },
 };

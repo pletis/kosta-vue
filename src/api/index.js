@@ -5,11 +5,11 @@ const instance = axios.create({
 });
 
 function registerUser(userData) {
-  return instance.post("users/register", userData);
+  return instance.post("register", userData);
 }
 
 function loginUser(userData) {
-  return instance.post("/login", userData);
+  return instance.post("login", userData);
 }
 
 export { registerUser, loginUser };
