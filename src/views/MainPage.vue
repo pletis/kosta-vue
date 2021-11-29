@@ -1,5 +1,9 @@
 <template>
-  <h1>main 페이지</h1>
+  <div>
+    <div class="main list-container contents">
+      <h1 class="page-header">팀 리스트</h1>
+    </div>
+  </div>
 </template>
 
 <script>
