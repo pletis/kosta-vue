@@ -15,6 +15,7 @@
           <label for="password">비밀번호:</label>
           <input id="password" type="text" v-model="password" />
         </div>
+
         <button
           :disabled="!isUsernameValid || !password"
           type="submit"
@@ -53,13 +54,14 @@ export default {
         // 비즈니스 로직
         const userData = {
           // 서버랑 이름 같게 해줘야 함
-          user_email: this.username,
-          user_pw: this.password,
+          username: this.username,
+          password: this.password,
         };
         const { data } = await loginUser(userData);
-        this.$store.commit("setUsername", this.username);
+        console.log(userData);
         console.log(data);
-        // this.logMessage = `${data}`;
+        this.$store.commit("setUsername", this.username);
+        // this.$store.commit("setUser", data);
         this.$router.push("/main");
       } catch (error) {
         // 에러 핸들링할 코드

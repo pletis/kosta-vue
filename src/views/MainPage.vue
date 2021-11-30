@@ -1,13 +1,26 @@
 <template>
   <div>
-    <div class="main list-container contents">
-      <h1 class="page-header">팀 리스트</h1>
-    </div>
+    <UserForm></UserForm>
   </div>
 </template>
 
 <script>
-export default {};
+import UserForm from "@/components/UserForm.vue";
+import { fetchTeams } from "@/api/index";
+export default {
+  methods: {
+    async fetchTeams() {
+      const response = await fetchTeams();
+      console.log(response);
+    },
+  },
+  created() {
+    this.fetchTeams();
+  },
+  components: {
+    UserForm,
+  },
+};
 </script>
 
 <style></style>

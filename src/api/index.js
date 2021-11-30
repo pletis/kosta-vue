@@ -1,15 +1,25 @@
 import axios from "axios";
 
-const instance = axios.create({
-  baseURL: process.env.VUE_APP_API_URL,
-});
+const instance = axios.create();
 
 function registerUser(userData) {
-  return instance.post("register", userData);
+  return instance.post("users/register", userData);
 }
 
 function loginUser(userData) {
   return instance.post("login", userData);
 }
 
-export { registerUser, loginUser };
+function updateUser(userData) {
+  return instance.post("users/update", userData);
+}
+
+function fetchTeams() {
+  return instance.get("team");
+}
+
+function createTeam(teamData) {
+  return instance.post("team/new", teamData);
+}
+
+export { registerUser, loginUser, updateUser, createTeam, fetchTeams };

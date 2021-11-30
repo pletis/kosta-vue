@@ -31,9 +31,9 @@
           <label for="user_pwHint">힌트: </label>
           <input id="user_pwHint" type="text" v-model="user_pwHint" />
         </div>
+
         <button type="submit" class="btn">회원 가입</button>
       </form>
-      <p class="log">{{ logMessage }}</p>
     </div>
   </div>
 </template>
@@ -72,8 +72,7 @@ export default {
         user_pwHint: this.user_pwHint,
       };
       const { data } = await registerUser(userData);
-      console.log(data.user_email);
-      this.logMessage = `${data.user_email} 님이 가입되었습니다`;
+      console.log(data);
       this.initForm();
     },
     initForm() {

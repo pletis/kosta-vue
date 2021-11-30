@@ -23,6 +23,14 @@ export default new VueRouter({
       component: () => import("@/views/MainPage.vue"),
     },
     {
+      path: "/profileupdate",
+      component: () => import("@/views/ProfileUpdatePage.vue"),
+    },
+    {
+      path: "/createteam",
+      component: () => import("@/views/CreateTeamPage.vue"),
+    },
+    {
       path: "*",
       component: () => import("@/views/NotFoundPage.vue"),
     },
