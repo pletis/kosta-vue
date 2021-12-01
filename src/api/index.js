@@ -15,11 +15,11 @@ function updateUser(userData) {
 }
 
 function fetchTeams() {
-  return instance.get("team");
+  return instance.get("team/1");
 }
 
 function createTeam(teamData) {
-  return instance.post("team/new", teamData);
+  return instance.post("team/1", teamData);
 }
 
 export { registerUser, loginUser, updateUser, createTeam, fetchTeams };

@@ -3,7 +3,7 @@
     <div>
       <router-link to="/" class="logo">
         JOBCHO
-        <span class="username">{{ $store.state.username }}</span>
+        <span class="username">{{ $store.state.user.user_email }}</span>
       </router-link>
     </div>
     <div class="navigations">

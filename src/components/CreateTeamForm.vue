@@ -37,8 +37,8 @@ export default {
         // 비즈니스 로직
         const teamData = {
           // 서버랑 이름 같게 해줘야 함
-          team_title: this.team_title,
-          team_description: this.team_description,
+          team_name: this.team_title,
+          team_info: this.team_description,
         };
         const { data } = await createTeam(teamData);
         console.log(teamData);
