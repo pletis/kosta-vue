@@ -1,9 +1,9 @@
 function saveAuthToCookie(value) {
-  document.cookie = `til_auth=${value}`;
+  document.cookie = `jobcho_auth=${value}`;
 }
 
 function saveUserToCookie(value) {
-  document.cookie = `til_user=${value}`;
+  document.cookie = `jobcho_user=${value}`;
 }
 
 function getAuthFromCookie() {

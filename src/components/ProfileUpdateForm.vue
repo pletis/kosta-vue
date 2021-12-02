@@ -38,7 +38,7 @@
 </template>
 
 <script>
-import { updateUser } from "@/api/index";
+import { updateUser } from "@/api/auth";
 
 export default {
   data() {

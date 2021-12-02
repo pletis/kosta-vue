@@ -1,25 +1,17 @@
 import axios from "axios";
+import { setInterceptors } from "./common/interceptors";
 
-const instance = axios.create();
-
-function registerUser(userData) {
-  return instance.post("users/register", userData);
+// 액시오스 초기화 함수
+function createInstance() {
+  return axios.create({});
 }
 
-function loginUser(userData) {
-  return instance.post("login", userData);
+function createInstanceWithAuth() {
+  const instance = axios.create({
+    baseURL: "team",
+  });
+  return setInterceptors(instance);
 }
 
-function updateUser(userData) {
-  return instance.post("users/update", userData);
-}
-
-function fetchTeams() {
-  return instance.get("team/1");
-}
-
-function createTeam(teamData) {
-  return instance.post("team/1", teamData);
-}
-
-export { registerUser, loginUser, updateUser, createTeam, fetchTeams };
+export const instance = createInstance();
+export const posts = createInstanceWithAuth("team");

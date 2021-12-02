@@ -31,6 +31,14 @@ export default new VueRouter({
       component: () => import("@/views/CreateTeamPage.vue"),
     },
     {
+      path: "/team/:id",
+      component: () => import("@/views/TeamEditPage.vue"),
+    },
+    {
+      path: "/team/:id/main",
+      component: () => import("@/views/TeamMainPage.vue"),
+    },
+    {
       path: "*",
       component: () => import("@/views/NotFoundPage.vue"),
     },

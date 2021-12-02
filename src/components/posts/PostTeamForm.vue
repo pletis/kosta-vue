@@ -26,12 +26,20 @@
 </template>
 
 <script>
-import { createTeam } from "@/api/team";
+import { fetchTeam, updateTeam } from "@/api/team";
 export default {
+  async created() {
+    const id = this.$route.params.id;
+    const { data } = await fetchTeam(id);
+    this.team_title = data.team_name;
+    this.team_description = data.team_info;
+    console.log(data);
+  },
   data() {
     return {
       team_title: "",
       team_description: "",
+      logMessage: "",
     };
   },
   computed: {
@@ -42,20 +50,16 @@ export default {
   methods: {
     async submitForm() {
       try {
-        // 비즈니스 로직
-        const teamData = {
-          // 서버랑 이름 같게 해줘야 함
+        const id = this.$route.params.id;
+
+        await updateTeam(id, {
           team_name: this.team_title,
           team_info: this.team_description,
-        };
-        const { data } = await createTeam(teamData);
-        console.log(teamData);
-        console.log(data);
-        this.$router.push("/main");
+        });
+        this.$router.push(`/main`);
       } catch (error) {
-        // 에러 핸들링할 코드
-        console.log(error.response.data);
-        // this.logMessage = error.response.data;
+        console.log(error);
+        this.logMessage = error;
       }
     },
   },

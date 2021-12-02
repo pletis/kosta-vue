@@ -3,8 +3,10 @@
     <div class="profile-wrapper">
       <div id="profile-box">
         <div>
-          <p id="user_name">{{ $store.state.user.user_name }}</p>
-          <p id="user_email">{{ $store.state.user.user_email }}</p>
+          <img id="user-profile" src="/icons/user.png" alt="" />
+
+          <p id="user_name">이름: {{ $store.state.user.user_name }}</p>
+          <p id="user_email">이메일: {{ $store.state.user.user_email }}</p>
         </div>
         <div>
           <router-link to="/profileupdate">프로필 설정</router-link>
@@ -12,25 +14,22 @@
       </div>
     </div>
     <LoadingSpinner v-if="isLoading"></LoadingSpinner>
-    <ul>
+    <ul v-else>
       <TeamListItem
         v-for="team in teams"
-        :key="team.team_name"
+        :key="team.team_num"
         :team="team"
+        @refresh="fetchData"
       ></TeamListItem>
     </ul>
-    <div class="plus-wrapper">
-      <div id="plus-box">
-        <h4>
-          <router-link to="/createteam">+ 팀 생성하기</router-link>
-        </h4>
-      </div>
-    </div>
+    <router-link to="/createteam" class="create-button">
+      <i class="ion-md-add"></i>
+    </router-link>
   </div>
 </template>
 
 <script>
-import { fetchTeams } from "@/api/index";
+import { fetchTeams } from "@/api/team";
 import TeamListItem from "@/components/posts/TeamListItem.vue";
 import LoadingSpinner from "@/components/common/LoadingSpinner.vue";
 export default {
@@ -45,20 +44,21 @@ export default {
     };
   },
   methods: {
-    async fetchTeams() {
+    async fetchData() {
       // 1초 지연 주어 스피너 보여주기
       var start = new Date().getTime();
       this.isLoading = true;
       const { data } = await fetchTeams();
       console.log(data);
+      //data 중 isLive = 1 인 것만 뽑아서 teams에 넣어줌
+      this.teams = data.filter((team) => team.isLive === 1);
       //1초 지연 실행
       while (new Date().getTime() < start + 1000);
       this.isLoading = false;
-      this.teams = data;
     },
   },
   created() {
-    this.fetchTeams();
+    this.fetchData();
   },
 };
 </script>

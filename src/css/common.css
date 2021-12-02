@@ -185,6 +185,10 @@ a:hover {
   justify-content: space-between;
 }
 
+#user-profile {
+  width: 10%;
+}
+
 /*--- team box ---*/
 
 .team-wrapper {
@@ -214,4 +218,38 @@ a:hover {
 #plus-box {
   display: flex;
   justify-content: center;
+}
+
+/* create button */
+
+.icon {
+  font-size: 1.3rem;
+  cursor: pointer;
+  color: #364f6b;
+  padding-right: 0.4rem;
+}
+.icon:hover {
+  color: #3fc1c9;
+}
+.icon:active {
+  color: #fc5185;
+}
+.ion-md-trash {
+  padding-left: 1rem;
+}
+
+.create-button {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  position: fixed;
+  right: 20px;
+  bottom: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.1);
+  background: rgb(35, 127, 0);
+  border: 3px solid white;
 }
