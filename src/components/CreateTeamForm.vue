@@ -19,7 +19,7 @@
         <p class="validation-text warning" v-if="!isContentsValid">
           설명이 너무 길어요!
         </p>
-        <button type="submit" class="btn">생성하기</button>
+        <button type="submit" class="my-btn">생성하기</button>
       </form>
     </div>
   </div>

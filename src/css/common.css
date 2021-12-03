@@ -1,4 +1,5 @@
 body {
+  height: 100%;
   background: #f7f6f9;
 }
 .app {
@@ -16,12 +17,22 @@ h1 {
 }
 
 /*--- LINK ---*/
-a {
+.router {
   color: #364f6b;
   text-decoration: none;
 }
-a:hover {
-  color: #3fc1c9;
+.router:hover {
+  color: rgb(35, 127, 0);
+}
+
+.a {
+  color: #364f6b;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.a:hover {
+  color: rgb(35, 127, 0);
 }
 
 /*--- LAYOUT ---*/
@@ -96,7 +107,7 @@ a:hover {
 .form div:nth-last-child(2) {
   margin-bottom: 0.5rem;
 }
-.btn {
+.my-btn {
   background: rgb(35, 127, 0);
   padding: 0.5rem 1.5rem;
   font-weight: 700;
@@ -104,7 +115,7 @@ a:hover {
   border: 0 solid #dae1e7;
   color: white;
 }
-.btn.disabled {
+.my-btn.disabled {
   opacity: 0.5;
   cursor: not-allowed;
 }
@@ -252,4 +263,35 @@ a:hover {
   box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.1);
   background: rgb(35, 127, 0);
   border: 3px solid white;
+}
+
+.main-create-button {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.1);
+  background: rgb(35, 127, 0);
+  border: 3px solid white;
+}
+
+.main-topic-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.main-topic-container > label {
+  font-weight: 600;
+  color: rgb(35, 127, 0);
+  margin-left: 10px;
+}
+
+.main-list-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }

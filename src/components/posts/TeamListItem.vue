@@ -7,10 +7,10 @@
           <p>{{ team.team_info }}</p>
         </div>
         <div class="button-wrapper">
-          <button class="btn" id="left-button" @click="routeEditPage">
+          <button class="my-btn" id="left-button" @click="routeEditPage">
             설정
           </button>
-          <button class="btn" @click="routeMainPage">팀으로 가기</button>
+          <button class="my-btn" @click="routeMainPage">팀으로 가기</button>
           <i class="icon ion-md-trash" @click="deleteItem"></i>
         </div>
       </div>

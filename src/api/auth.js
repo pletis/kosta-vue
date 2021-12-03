@@ -16,4 +16,9 @@ function updateUser(userData) {
   return instance.post("users/update", userData);
 }
 
-export { registerUser, loginUser, updateUser };
+// 비밀번호 찾기 API
+function findUser(userData) {
+  return instance.post("users/emailFindPw", userData);
+}
+
+export { registerUser, loginUser, updateUser, findUser };

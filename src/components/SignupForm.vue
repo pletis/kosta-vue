@@ -32,7 +32,7 @@
           <input id="user_pwHint" type="text" v-model="user_pwHint" />
         </div>
 
-        <button type="submit" class="btn">회원 가입</button>
+        <button type="submit" class="my-btn">회원 가입</button>
       </form>
     </div>
   </div>

@@ -1,7 +1,7 @@
 <template>
   <header>
     <div>
-      <router-link to="/" class="logo">
+      <router-link to="/" class="logo router">
         JOBCHO
         <span class="username">{{ $store.state.user.user_email }}</span>
       </router-link>
@@ -11,8 +11,8 @@
         <a href="javascript:;" @click="logoutUser">Logout</a>
       </template>
       <template v-else>
-        <router-link to="/login">로그인</router-link>
-        <router-link to="/signup">회원가입</router-link>
+        <router-link class="router" to="/login">로그인</router-link>
+        <router-link class="router" to="/signup">회원가입</router-link>
       </template>
     </div>
   </header>

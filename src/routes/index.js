@@ -19,6 +19,10 @@ export default new VueRouter({
       component: () => import("@/views/SignupPage.vue"),
     },
     {
+      path: "/pwfind",
+      component: () => import("@/views/PwFindPage.vue"),
+    },
+    {
       path: "/main",
       component: () => import("@/views/MainPage.vue"),
     },

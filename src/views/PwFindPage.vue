@@ -1,17 +1,18 @@
 <template>
   <div>
     <AppHeader />
-    <PostTeamForm></PostTeamForm>
+    <h1>비밀번호 찾기</h1>
+    <PwFindForm />
   </div>
 </template>
 
 <script>
 import AppHeader from "@/components/common/AppHeader.vue";
-import PostTeamForm from "@/components/posts/PostTeamForm.vue";
+import PwFindForm from "@/components/PwFindForm.vue";
 export default {
   components: {
     AppHeader,
-    PostTeamForm,
+    PwFindForm,
   },
 };
 </script>

@@ -31,7 +31,7 @@
           <label for="user_pwhint">힌트: </label>
           <input id="user_pwhint" type="text" v-model="user_pwhint" />
         </div>
-        <button type="submit" class="btn">수정 완료</button>
+        <button type="submit" class="my-btn">수정 완료</button>
       </form>
     </div>
   </div>

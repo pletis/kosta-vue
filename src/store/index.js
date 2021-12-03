@@ -23,6 +23,8 @@ export default new Vuex.Store({
       user_birth: "1234",
       user_pwhint: "1234",
     },
+    member: {},
+    maindata: {},
   },
   getters: {
     isLogin(state) {
@@ -38,6 +40,12 @@ export default new Vuex.Store({
     },
     clearUsername(state) {
       state.username = "";
+    },
+    setMaindata(state, maindata) {
+      state.maindata = maindata;
+    },
+    clearMain(state) {
+      state.maindata = {};
     },
   },
   actions: {
