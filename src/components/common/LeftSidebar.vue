@@ -35,9 +35,17 @@
       </div>
 
       <b-dd-divider></b-dd-divider>
-
-      <div class="left-ul">
-        <ul></ul>
+      <LoadingSpinner v-if="isLoading" />
+      <div v-else class="left-ul">
+        <ul v-for="board in boards" :key="board.board_num">
+          <div class="main-list-container">
+            <a class="a" @click="fetchPosts(board)">{{ board.board_name }}</a>
+            <div>
+              <ion-icon name="settings-outline"></ion-icon>
+              <i class="icon ion-md-trash" @click="deleteItem(board)"></i>
+            </div>
+          </div>
+        </ul>
       </div>
     </div>
 
@@ -64,7 +72,6 @@
 </template>
 
 <script>
-import { getPostList } from "@/api/post";
 import { createBoard, deleteBoard } from "@/api/board";
 import LoadingSpinner from "@/components/common/LoadingSpinner.vue";
 
@@ -79,13 +86,6 @@ export default {
     LoadingSpinner,
   },
   methods: {
-    async fetchPosts(board) {
-      const team_id = this.team_id;
-      const board_id = board.board_num;
-      const { data } = await getPostList(team_id, board_id);
-      console.log(data.getListPost);
-      this.$store.commit("setMaindata", data.getListPost);
-    },
     async insertBoard(team_id) {
       try {
         // 1초 지연 주어 스피너 보여주기
@@ -123,6 +123,9 @@ export default {
         console.log(error);
       }
     },
+    fetchPosts(board) {
+      this.$emit("reload", board);
+    },
 
     //모달 메소드
     resetModal() {
@@ -130,15 +133,12 @@ export default {
       this.board_info = "";
     },
     handleOk(bvModalEvt) {
-      // Prevent modal from closing
       bvModalEvt.preventDefault();
-      // Trigger submit handler
       this.handleSubmit();
     },
     handleSubmit() {
       // 값이 유효하면 서버에 요청
       this.insertBoard(this.team_id);
-      // Hide the modal manually
       this.$nextTick(() => {
         this.$bvModal.hide("modal-prevent-closing");
       });
@@ -174,11 +174,5 @@ export default {
 }
 ul {
   padding-left: 10px;
-}
-
-#left-title {
-  font-weight: 600;
-  color: rgb(35, 127, 0);
-  margin-left: 10px;
 }
 </style>

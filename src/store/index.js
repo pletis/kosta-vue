@@ -7,6 +7,7 @@ import {
   saveUserToCookie,
 } from "@/utils/cookies";
 import { loginUser } from "@/api/auth";
+import { getPostList } from "@/api/post";
 
 Vue.use(Vuex);
 
@@ -25,6 +26,7 @@ export default new Vuex.Store({
     },
     member: {},
     maindata: {},
+    board: {},
   },
   getters: {
     isLogin(state) {
@@ -47,6 +49,9 @@ export default new Vuex.Store({
     clearMain(state) {
       state.maindata = {};
     },
+    setBoard(state, title) {
+      state.board = title;
+    },
   },
   actions: {
     async LOGIN({ commit }, userData) {
@@ -61,6 +66,15 @@ export default new Vuex.Store({
       saveAuthToCookie();
       saveUserToCookie(this.username);
       return data;
+    },
+    async FETCHPOSTS({ commit }, team_id) {
+      // state 에 있는 board 객체의 board_num 을 가져온다
+      // left sidebar 에 있는 board 목록을 눌렀을 때 board 가 그걸로 초기화 되기 때문에
+      // board_num 은 누른 board
+      const board_id = this.state.board.board_num;
+      const { data } = await getPostList(team_id, board_id);
+      console.log(data.getListPost);
+      commit("setMaindata", data.getListPost);
     },
   },
 });

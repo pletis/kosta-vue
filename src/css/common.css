@@ -295,3 +295,21 @@ h1 {
   align-items: center;
   justify-content: space-between;
 }
+
+#left-title {
+  font-weight: 600;
+  color: rgb(35, 127, 0);
+  margin-left: 10px;
+}
+
+#main-title {
+  color: rgb(35, 127, 0);
+  margin-left: 10px;
+}
+
+.main-contents {
+  max-width: 1230px;
+  height: 100vh;
+  background: whitesmoke;
+  overflow-x: auto;
+}

@@ -6,9 +6,9 @@ function createInstance() {
   return axios.create({});
 }
 
-function createInstanceWithAuth() {
+function createInstanceWithAuth(url) {
   const instance = axios.create({
-    baseURL: "team",
+    baseURL: url,
   });
   return setInterceptors(instance);
 }
