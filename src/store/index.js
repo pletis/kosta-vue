@@ -27,6 +27,7 @@ export default new Vuex.Store({
     member: {},
     maindata: {},
     board: {},
+    post: {},
   },
   getters: {
     isLogin(state) {
@@ -51,6 +52,9 @@ export default new Vuex.Store({
     },
     setBoard(state, title) {
       state.board = title;
+    },
+    setPost(state, post) {
+      state.post = post;
     },
   },
   actions: {

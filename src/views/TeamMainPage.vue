@@ -5,10 +5,11 @@
       :boards="boards"
       :chatList="chatList"
       @boardlist="getBoardList"
+      @chatRoomlist="getChatList"
       @reload="fetchPosts"
     ></LeftSidebar>
-    <LoadingSpinner v-if="isLoading"></LoadingSpinner>
-    <Maindata v-else :boards="boards" />
+    <LoadingSpinner v-if="isLoading" />
+    <MainDataPage v-else />
   </div>
 </template>
 
@@ -16,10 +17,11 @@
 import LeftSidebar from "@/components/common/LeftSidebar.vue";
 import RightSidebar from "@/components/common/RightSidebar.vue";
 import LoadingSpinner from "@/components/common/LoadingSpinner.vue";
-import Maindata from "@/components/Maindata.vue";
+import MainDataPage from "@/views/MainDataPage.vue";
+
 import { getPostList } from "@/api/post";
 import { getBoard } from "@/api/board";
-import { getChatList } from "@/api/chat";
+import { getChatRoomList } from "@/api/chat";
 export default {
   data() {
     return {
@@ -29,23 +31,23 @@ export default {
     };
   },
   components: {
-    Maindata,
     LeftSidebar,
     RightSidebar,
     LoadingSpinner,
+    MainDataPage,
   },
   methods: {
     async getBoardList() {
-      const id = this.$route.params.id;
+      const id = this.$route.params.teamId;
       const { data } = await getBoard(id);
       console.log("data", data);
       this.boards = data;
     },
     async getChatList() {
-      const id = this.$route.params.id;
-      const { data } = await getChatList(id);
+      const id = this.$route.params.teamId;
+      const { data } = await getChatRoomList(id);
       console.log("data", data);
-      this.chats = data;
+      this.chatList = data;
     },
     async fetchPosts(board) {
       var start = new Date().getTime();
@@ -62,7 +64,7 @@ export default {
   },
   created() {
     this.getBoardList();
-    // this.getChatList();
+    this.getChatList();
   },
 };
 </script>

@@ -47,6 +47,7 @@ export default {
           // 서버랑 이름 같게 해줘야 함
           team_name: this.team_title,
           team_info: this.team_description,
+          user_num: this.$store.state.user.user_num,
         };
         const { data } = await createTeam(teamData);
         console.log(teamData);

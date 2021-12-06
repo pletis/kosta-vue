@@ -9,38 +9,65 @@
     </div>
     <div id="actived" v-if="post == 0">
       <div class="grid">
-        <div class="grid_body" v-for="post in maindata" :key="post.post_num">
+        <div
+          class="grid_body"
+          v-for="post in maindata"
+          @click="postdetail(post)"
+          :key="post.post_num"
+        >
           <div>{{ post.post_title }}</div>
-          <div>{{ post.post_contents }}</div>
         </div>
       </div>
     </div>
+    <!-- 게시물 작성 페이지 -->
     <div v-else-if="post == 1"><PostPostForm @reload="fetchPosts" /></div>
-    <div v-else-if="post == 2"></div>
-    <LoadingSpinner v-else-if="post == 3" />
+    <!-- 게시물 상세 페이지 -->
+    <div v-else-if="post == 2">
+      <PostItemDetail
+        :post="post_data"
+        @reload="fetchPosts"
+        @setting="postEdit"
+      />
+    </div>
+    <!-- 게시물 수정 페이지 -->
+    <div v-else-if="post == 3"><PostEditForm /></div>
+    <LoadingSpinner v-else-if="post == 4" />
   </div>
 </template>
 
 <script>
 import PostPostForm from "@/components/posts/PostPostForm.vue";
+import PostItemDetail from "@/components/common/PostItemDetail.vue";
 import LoadingSpinner from "@/components/common/LoadingSpinner.vue";
+import PostEditForm from "@/components/posts/PostEditForm.vue";
 export default {
   data() {
     return {
       post: 0,
+      post_data: {},
     };
   },
   components: {
     PostPostForm,
     LoadingSpinner,
+    PostItemDetail,
+    PostEditForm,
   },
   methods: {
     async fetchPosts() {
       var start = new Date().getTime();
-      this.post = 3;
+      this.post = 4;
       await this.$store.dispatch("FETCHPOSTS", this.$route.params.id);
       while (new Date().getTime() < start + 1000);
       this.post = 0;
+    },
+    postdetail(post) {
+      this.$store.commit("setPost", post);
+      this.post = 2;
+    },
+    postEdit(post) {
+      this.post_data = post;
+      this.post = 1;
     },
   },
   computed: {

@@ -70,10 +70,4 @@ export default {
 };
 </script>
 
-<style>
-#left-button {
-  margin-right: 10px;
-  background: rgb(231, 231, 231);
-  color: white;
-}
-</style>
+<style></style>
