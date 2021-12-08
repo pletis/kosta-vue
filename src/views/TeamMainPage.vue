@@ -6,7 +6,7 @@
       :chatList="chatList"
       @boardlist="getBoardList"
       @chatRoomlist="getChatList"
-      @reload="fetchPosts"
+      @reloadBoard="fetchPosts"
     ></LeftSidebar>
     <LoadingSpinner v-if="isLoading" />
     <MainDataPage v-else />
@@ -21,13 +21,16 @@ import MainDataPage from "@/views/MainDataPage.vue";
 
 import { getPostList } from "@/api/post";
 import { getBoard } from "@/api/board";
-import { getChatRoomList } from "@/api/chat";
+import { getChatRoomList, loadChatMember } from "@/api/chat";
+
 export default {
   data() {
     return {
       boards: [],
       chatList: [],
+      items: [],
       isLoading: false,
+      team_id: this.$route.params.team_Id,
     };
   },
   components: {
@@ -49,10 +52,15 @@ export default {
       console.log("data", data);
       this.chatList = data;
     },
+    async loadChatMember() {
+      const id = this.$route.params.teamId;
+      const { data } = await loadChatMember(id);
+      console.log("data", data);
+    },
     async fetchPosts(board) {
       var start = new Date().getTime();
       this.isLoading = true;
-      const team_id = this.team_id;
+      const team_id = this.$route.params.teamId;
       const board_id = board.board_num;
       const { data } = await getPostList(team_id, board_id);
       console.log(data.getListPost);
@@ -61,10 +69,15 @@ export default {
       while (new Date().getTime() < start + 1000);
       this.isLoading = false;
     },
+
+    add() {
+      this.items.push("ChatItemPage");
+    },
   },
   created() {
     this.getBoardList();
     this.getChatList();
+    this.loadChatMember();
   },
 };
 </script>

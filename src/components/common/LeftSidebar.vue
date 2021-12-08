@@ -1,5 +1,6 @@
 <template>
   <div id="main-page">
+    <ChatItemPage v-for="chat in chats" :key="chat.chatRoom_num" :chat="chat" />
     <div class="left">
       <h3 id="left-title">팀 {{ team_id }}에 접속중</h3>
 
@@ -48,7 +49,9 @@
       <div v-else class="left-ul">
         <ul v-for="chat in chatList" :key="chat.chatRoom_num">
           <div class="main-list-container">
-            <a class="a" @click="fetchPosts(chat)">{{ chat.chatRoom_name }}</a>
+            <a class="a" @click="fetchChatRoom(chat)">{{
+              chat.chatRoom_name
+            }}</a>
             <div>
               <ion-icon
                 name="settings-outline"
@@ -165,8 +168,14 @@
 
 <script>
 import { createBoard, deleteBoard, updateBoard } from "@/api/board";
-import { updateChatRoom, createChatRoom, deleteChatRoom } from "@/api/chat";
+import {
+  updateChatRoom,
+  createChatRoom,
+  deleteChatRoom,
+  // fetchChatRoom,
+} from "@/api/chat";
 import LoadingSpinner from "@/components/common/LoadingSpinner.vue";
+import ChatItemPage from "@/components/common/ChatItemPage.vue";
 
 export default {
   props: {
@@ -181,6 +190,7 @@ export default {
   },
   components: {
     LoadingSpinner,
+    ChatItemPage,
   },
   methods: {
     async insertBoard(team_id) {
@@ -262,9 +272,12 @@ export default {
     },
 
     fetchPosts(board) {
-      this.$emit("reload", board);
+      this.$emit("reloadBoard", board);
     },
-    fetchChats() {},
+    async fetchChatRoom(chat) {
+      console.log(chat);
+      this.chats.push(chat);
+    },
 
     async updateBoard() {
       var start = new Date().getTime();
@@ -372,6 +385,8 @@ export default {
       isModal2: false,
       isModal3: false,
       isModal4: false,
+      isModal5: false,
+      chats: [],
     };
   },
 };
@@ -385,6 +400,7 @@ export default {
   height: 100vh;
   background: white;
   border-right: 1px solid rgba(0, 0, 0, 0.1);
+  z-index: 0;
 }
 
 .left-ul {
@@ -393,21 +409,5 @@ export default {
 }
 ul {
   padding-left: 10px;
-}
-
-.black-bg {
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-  position: fixed;
-  padding: 20px;
-}
-
-.white-bg {
-  width: 300px;
-  height: 300px;
-  background: white;
-  border-radius: 8px;
-  padding: 20px;
 }
 </style>

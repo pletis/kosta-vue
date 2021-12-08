@@ -320,3 +320,21 @@ h1 {
   background: whitesmoke;
   overflow-x: auto;
 }
+
+.black-bg {
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  position: fixed;
+  padding: 20px;
+  z-index: 1;
+}
+
+.white-bg {
+  width: 300px;
+  height: 300px;
+  text-align: center;
+  background: white;
+  border-radius: 8px;
+  padding: 20px;
+}

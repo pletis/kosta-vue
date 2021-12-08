@@ -54,9 +54,10 @@ export default {
         // 비즈니스 로직
         const userData = {
           // 서버랑 이름 같게 해줘야 함
-          username: this.username,
-          password: this.password,
+          user_email: this.username,
+          user_pw: this.password,
         };
+        console.log(userData);
         // 요청을 보내고 받은후에 라우팅이 일어나야하기때문에 !!await!!
         await this.$store.dispatch("LOGIN", userData);
         // 로그인 성공시 메인페이지로 이동
