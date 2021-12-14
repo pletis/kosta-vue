@@ -22,7 +22,7 @@ import MainDataPage from "@/views/MainDataPage.vue";
 import { getPostList } from "@/api/post";
 import { getBoard } from "@/api/board";
 import { getChatRoomList, loadChatMember } from "@/api/chat";
-
+import { loadTeamMember } from "@/api/team";
 export default {
   data() {
     return {
@@ -63,11 +63,19 @@ export default {
       const team_id = this.$route.params.teamId;
       const board_id = board.board_num;
       const { data } = await getPostList(team_id, board_id);
-      console.log(data.getListPost);
-      this.$store.commit("setMaindata", data.getListPost);
+      console.log(data);
+      this.$store.commit("setMaindata", data);
       this.$store.commit("setBoard", board);
       while (new Date().getTime() < start + 1000);
       this.isLoading = false;
+    },
+
+    async loadTeamMember() {
+      const user_num = this.$store.state.user.user_num;
+      const team_num = this.$route.params.teamId;
+      const { data } = await loadTeamMember(user_num, team_num);
+      console.log("멤버데이터:", data);
+      this.$store.commit("setMember", data);
     },
 
     add() {
@@ -78,6 +86,7 @@ export default {
     this.getBoardList();
     this.getChatList();
     this.loadChatMember();
+    this.loadTeamMember();
   },
 };
 </script>

@@ -43,7 +43,7 @@
     </div>
     <div class="toggleContainer">
       <span>완료된 투표 보기</span>
-      <ToggleButton />
+      <ToggleButton @change="onChangeEventHandler" v-model="toggle" />
     </div>
     <b-dd-divider></b-dd-divider>
     <!-- 투표 들어갈 곳 -->
@@ -58,7 +58,7 @@
 
 <script>
 import { ToggleButton } from "vue-js-toggle-button";
-import { getVotes, createVote } from "@/api/vote";
+import { getVotes, getEndVotes, createVote } from "@/api/vote";
 import VoteBody from "@/components/VoteBody.vue";
 
 export default {
@@ -72,11 +72,12 @@ export default {
       vote_content4: "",
       vote_content5: "",
       isModal: false,
+      toggle: false,
     };
   },
   methods: {
     createVote: async function () {
-      const team_id = 19;
+      const team_id = this.$route.params.teamId;
       const vote = {
         vote_name: this.vote_name,
         vote_content1: this.vote_content1,
@@ -85,7 +86,7 @@ export default {
         vote_content4: this.vote_content4,
         vote_content5: this.vote_content5,
         team_id: team_id,
-        member_num: 1,
+        member_num: this.$store.state.member.member_num,
       };
       const { data } = await createVote(team_id, vote);
       await this.getVoteList();
@@ -93,8 +94,23 @@ export default {
       console.log(data);
     },
     getVoteList: async function () {
-      const team_id = 19;
+      const team_id = this.$route.params.teamId;
       const { data } = await getVotes(team_id);
+      console.log(data);
+      this.votes = data;
+    },
+    onChangeEventHandler: function () {
+      this.toggle = !this.toggle;
+      console.log(this.toggle);
+      if (this.toggle == true) {
+        this.getVoteList();
+      } else {
+        this.getEndVotes();
+      }
+    },
+    getEndVotes: async function () {
+      const team_id = this.$route.params.teamId;
+      const { data } = await getEndVotes(team_id);
       console.log(data);
       this.votes = data;
     },

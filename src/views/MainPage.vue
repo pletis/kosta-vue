@@ -52,10 +52,11 @@ export default {
   },
   methods: {
     async fetchData() {
+      const user_num = this.$store.state.user.user_num;
       // 1초 지연 주어 스피너 보여주기
       var start = new Date().getTime();
       this.isLoading = true;
-      const { data } = await fetchTeams();
+      const { data } = await fetchTeams(user_num);
       console.log(data);
       //data 중 isLive = 1 인 것만 뽑아서 teams에 넣어줌
       this.teams = data.filter((team) => team.isLive == 1);

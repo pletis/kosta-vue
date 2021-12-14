@@ -1,6 +1,5 @@
-import { instance } from "./index";
-
 // 투표 관련 API
+import { instance } from "./index";
 
 // 투표 생성 API
 function createVote(team_num, vote) {
@@ -14,6 +13,11 @@ function voteInsert(team_num, vote_num, vote) {
 // 투표 조회 API
 function getVotes(team_num) {
   return instance.get(`/team/${team_num}/vote/list`);
+}
+
+// 완료된 투표 조회 API
+function getEndVotes(team_num) {
+  return instance.get(`/team/${team_num}/vote/endlist`);
 }
 
 // 투표 결과 조회 API
@@ -65,6 +69,7 @@ export {
   createVote,
   voteInsert,
   getVotes,
+  getEndVotes,
   getVoteResult,
   getVoteMember1,
   getVoteMember2,

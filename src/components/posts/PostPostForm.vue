@@ -34,7 +34,7 @@ export default {
       team_id: this.$route.params.id,
       post_title: "",
       post_contents: "",
-      member_num: 1,
+      member_num: this.$store.state.member.member_num,
       board_num: this.$store.state.board.board_num,
       logMessage: "",
     };
@@ -48,10 +48,12 @@ export default {
     async submitForm() {
       const team_id = this.team_id;
       const board_id = this.board_num;
+      const member_num = this.$store.state.member.member_num;
       const post = {
         post_title: this.post_title,
         post_contents: this.post_contents,
-        member_num: this.member_num,
+        member_num: member_num,
+        writer: this.$store.state.user.user_name,
       };
       const { data } = await createPost(team_id, board_id, post);
       console.log(data);

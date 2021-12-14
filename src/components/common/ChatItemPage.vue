@@ -2,6 +2,7 @@
   <DraggableDiv class="col-11">
     <template slot="header">
       <h3>{{ chat.chatRoom_name }}</h3>
+      <span @click="closeChatRoom">X</span>
     </template>
     <template slot="main">
       <div id="chats" v-for="chat in chats" :key="chat.chat_num">
@@ -22,10 +23,12 @@
 <script>
 import DraggableDiv from "./DraggableDiv";
 import { loadChatdetail, sendChat } from "@/api/chat";
+import { getChatMember } from "@/api/member";
 export default {
   data() {
     return {
       chats: [],
+      chatMember_num: "",
       websocket: {},
       message: "",
     };
@@ -40,6 +43,16 @@ export default {
     DraggableDiv,
   },
   methods: {
+    getChatMember: async function () {
+      const team_id = this.$route.params.teamId;
+      const chatRoom_id = this.chat.chatRoom_num;
+      const { data } = await getChatMember(team_id, chatRoom_id);
+      // data의 member_num 과 store의 member_num 이 같은 값 filter
+      this.chatMember_num = data.filter(
+        (member) => member.member_num === this.$store.state.member.member_num
+      )[0].chatMember_num;
+      console.log(this.chatMember_num);
+    },
     async send() {
       try {
         this.chats.push({
@@ -49,7 +62,7 @@ export default {
         const chatRoom_id = this.chat.chatRoom_num;
         const team_id = this.$route.params.teamId;
         const chat_contents = {
-          chatMember_num: 6,
+          chatMember_num: this.chatMember_num,
           chat_contents: this.message,
         };
         const { data } = await sendChat(team_id, chatRoom_id, chat_contents);
@@ -93,8 +106,13 @@ export default {
         });
       };
     },
+    closeChatRoom() {
+      console.log("close");
+      this.$emit("closeChatRoom");
+    },
   },
   created() {
+    this.getChatMember();
     this.loadChatdetail();
   },
 };

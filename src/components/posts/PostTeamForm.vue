@@ -1,6 +1,6 @@
 <template>
   <div class="contents">
-    <h1>팀 생성하기</h1>
+    <h1>팀 수정하기</h1>
     <div class="form-wrapper form-wrapper-sm">
       <form @submit.prevent="submitForm" class="form">
         <div>
@@ -29,8 +29,9 @@
 import { fetchTeam, updateTeam } from "@/api/team";
 export default {
   async created() {
-    const id = this.$route.params.id;
-    const { data } = await fetchTeam(id);
+    const user_num = this.$store.state.user.user_num;
+    const id = this.$route.params.teamId;
+    const { data } = await fetchTeam(user_num, id);
     this.team_title = data.team_name;
     this.team_description = data.team_info;
     console.log(data);
@@ -50,8 +51,7 @@ export default {
   methods: {
     async submitForm() {
       try {
-        const id = this.$route.params.id;
-
+        const id = this.$route.params.teamId;
         await updateTeam(id, {
           team_name: this.team_title,
           team_info: this.team_description,

@@ -4,7 +4,7 @@
     <div id="bg" v-if="isModal == true">
       <div class="contents">
         <div class="form-wrapper form-wrapper-sm">
-          <div v-if="isVoting == false">
+          <div v-if="isVoting == false && vote.islive == 1">
             <input
               type="radio"
               v-model="radioValues"
@@ -65,44 +65,44 @@
                 </div>
               </b-tooltip>
               <div class="mt-3">
-                <b-button
+                <span
                   v-if="voteResult.vote_result1 != 0"
                   id="tooltip-button-1"
                   @click="show = !show"
-                  >{{ voteResult.vote_result1 }}</b-button
+                  >{{ voteResult.vote_result1 }}</span
                 >
               </div>
             </div>
             <div v-if="voteResult.vote_content2" @click="getVoteMember2">
               {{ voteResult.vote_content2 }}:
               <div class="mt-3">
-                <b-button
+                <span
                   v-if="voteResult.vote_result2 != 0"
                   id="tooltip-button-1"
                   @click="show = !show"
-                  >{{ voteResult.vote_result2 }}</b-button
+                  >{{ voteResult.vote_result2 }}</span
                 >
               </div>
             </div>
             <div v-if="voteResult.vote_content3" @click="getVoteMember3">
               {{ voteResult.vote_content3 }}:
               <div class="mt-3">
-                <b-button
+                <span
                   v-if="voteResult.vote_result3 != 0"
                   id="tooltip-button-1"
                   @click="show = !show"
-                  >{{ voteResult.vote_result3 }}</b-button
+                  >{{ voteResult.vote_result3 }}</span
                 >
               </div>
             </div>
             <div v-if="voteResult.vote_content4" @click="getVoteMember4">
               {{ voteResult.vote_content4 }}:
               <div class="mt-3">
-                <b-button
+                <span
                   v-if="voteResult.vote_result4 != 0"
                   id="tooltip-button-1"
                   @click="show = !show"
-                  >{{ voteResult.vote_result4 }}</b-button
+                  >{{ voteResult.vote_result4 }}</span
                 >
               </div>
             </div>
@@ -159,11 +159,11 @@ export default {
   },
   methods: {
     voteInsert: async function () {
-      const team_id = 19;
+      const team_id = this.$route.params.teamId;
       const vote_id = this.vote.vote_num;
       const vote = {
         vote_num: vote_id,
-        member_num: 1,
+        member_num: this.$store.state.member.member_num,
         vote_result: this.radioValues,
       };
       const { data } = await voteInsert(team_id, vote_id, vote);
@@ -171,21 +171,21 @@ export default {
       this.resetModal();
     },
     getVoteResult: async function () {
-      const team_id = 19;
+      const team_id = this.$route.params.teamId;
       const vote_id = this.vote.vote_num;
       const { data } = await getVoteResult(team_id, vote_id);
       console.log(data);
       this.voteResult = data;
     },
     voteModalSet: async function () {
-      const team_id = 19;
+      const team_id = this.$route.params.teamId;
       const vote_id = this.vote.vote_num;
       const { data } = await getVoteMemberList(team_id, vote_id);
       console.log(data);
       this.isModal = true;
       // for 문을 사용해 data의 값중 member_num이 있으면 투표가 진행중이므로 isVoting을 true로 바꿔준다.
       for (let i = 0; i < data.length; i++) {
-        if (data[i] == 1) {
+        if (data[i] == this.$store.state.member.member_num) {
           this.isVoting = true;
           await this.getVoteResult();
           break;
@@ -193,35 +193,35 @@ export default {
       }
     },
     getVoteMember1: async function () {
-      const team_id = 19;
+      const team_id = this.$route.params.teamId;
       const vote_id = this.vote.vote_num;
       const { data } = await getVoteMember1(team_id, vote_id);
       console.log(data);
       this.voteMembers = data;
     },
     getVoteMember2: async function () {
-      const team_id = 19;
+      const team_id = this.$route.params.teamId;
       const vote_id = this.vote.vote_num;
       const { data } = await getVoteMember2(team_id, vote_id);
       console.log(data);
       this.voteMembers = data;
     },
     getVoteMember3: async function () {
-      const team_id = 19;
+      const team_id = this.$route.params.teamId;
       const vote_id = this.vote.vote_num;
       const { data } = await getVoteMember3(team_id, vote_id);
       console.log(data);
       this.voteMembers = data;
     },
     getVoteMember4: async function () {
-      const team_id = 19;
+      const team_id = this.$route.params.teamId;
       const vote_id = this.vote.vote_num;
       const { data } = await getVoteMember4(team_id, vote_id);
       console.log(data);
       this.voteMembers = data;
     },
     getVoteMember5: async function () {
-      const team_id = 19;
+      const team_id = this.$route.params.teamId;
       const vote_id = this.vote.vote_num;
       const { data } = await getVoteMember5(team_id, vote_id);
       console.log(data);
@@ -229,12 +229,16 @@ export default {
     },
 
     deleteVote: async function () {
-      const team_id = 19;
-      const vote_id = this.vote.vote_num;
-      const { data } = await deleteVote(team_id, vote_id);
-      console.log(data);
-      this.resetModal();
-      this.$emit("reload");
+      if (this.$store.state.member.member_num == this.vote.member_num) {
+        const team_id = this.$route.params.teamId;
+        const vote_id = this.vote.vote_num;
+        const { data } = await deleteVote(team_id, vote_id);
+        console.log(data);
+        this.resetModal();
+        this.$emit("reload");
+      } else {
+        alert("마감 권한이 없습니다.");
+      }
     },
     resetModal: function () {
       this.isModal = false;

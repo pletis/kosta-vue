@@ -7,18 +7,25 @@
       <h3 id="main-title">{{ this.$store.state.board.board_name }}</h3>
       <a class="a" @click="post = 1">게시글 작성하기</a>
     </div>
-    <div id="actived" v-if="post == 0">
-      <div class="grid">
-        <div
-          class="grid_body"
-          v-for="post in maindata"
-          @click="postdetail(post)"
-          :key="post.post_num"
-        >
-          <div>{{ post.post_title }}</div>
+
+    <ul v-if="post == 0">
+      <li v-for="post in maindata" :key="post.post_num">
+        <div class="post-title" @click="postdetail(post)">
+          {{ post.post_title }}
+          <div id="post-writer">{{ post.writer }}</div>
         </div>
-      </div>
-    </div>
+        <b-dd-divider></b-dd-divider>
+        <div class="post-contents">
+          {{ post.post_contents }}
+        </div>
+        <div class="post-time">
+          댓글 수 :
+          {{ post.replyCnt }}
+
+          <i class="icon ion-md-trash" @click="deleteItem(post)"></i>
+        </div>
+      </li>
+    </ul>
     <!-- 게시물 작성 페이지 -->
     <div v-else-if="post == 1"><PostPostForm @reload="fetchPosts" /></div>
     <!-- 게시물 상세 페이지 -->
@@ -40,11 +47,15 @@ import PostPostForm from "@/components/posts/PostPostForm.vue";
 import PostItemDetail from "@/components/common/PostItemDetail.vue";
 import LoadingSpinner from "@/components/common/LoadingSpinner.vue";
 import PostEditForm from "@/components/posts/PostEditForm.vue";
+import { deletePost } from "@/api/post.js";
 export default {
   data() {
     return {
       post: 0,
       post_data: {},
+      post_num: this.$store.state.post.post_num,
+      board_num: this.$store.state.board.board_num,
+      team_num: this.$route.params.id,
     };
   },
   components: {
@@ -61,11 +72,24 @@ export default {
       while (new Date().getTime() < start + 1000);
       this.post = 0;
     },
+    async deleteItem(post) {
+      if (this.$store.state.member.member_num == post.member_num) {
+        const post_id = post.post_num;
+        const board_id = this.board_num;
+        const team_id = this.team_num;
+        const { data } = await deletePost(post_id, team_id, board_id);
+        console.log(data);
+        this.fetchPosts();
+      } else {
+        alert("권한이 없습니다.");
+      }
+    },
     postdetail(post) {
       this.$store.commit("setPost", post);
       this.post = 2;
     },
     postEdit(post) {
+      this.$store.commit("setPost", post);
       this.post_data = post;
       this.post = 1;
     },
@@ -78,43 +102,54 @@ export default {
 };
 </script>
 
-<style>
-#actived {
-  padding: 0 35px;
+<style scoped>
+ul {
+  display: flex;
+  flex-wrap: wrap;
 }
-#actived .grid_body {
-  width: 200px;
-  display: inline-block;
-  margin: 15px;
-  padding: 0;
-  cursor: pointer;
-}
-#actived .grid_body div {
-  background: rgb(35, 127, 0);
-  padding: 7px 10px;
-  color: #ffffff;
-  text-align: left;
+
+ul > li {
   position: relative;
+  width: 300px;
+  height: 250px;
+  background: white;
+  margin: 10px;
+  padding: 10px 20px;
+  box-shadow: 0 20px 20px rgba(0, 0, 0, 0.08);
+  border-radius: 3px;
 }
 
-#actived .grid_body ul {
-  width: 200px;
-  padding: 0;
-  border-bottom: 0;
-  border-spacing: 0;
-  display: none;
+.post-title {
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
 }
-#actived .grid_body ul li {
-  background: #ffffff;
-  padding: 6px 8px;
-  border: 1px solid #707070;
-  border-top: 0;
+.post-contents {
+  height: 160px;
+  overflow-y: auto;
+  font-size: 18px;
 }
-
+.post-time {
+  position: absolute;
+  bottom: 4px;
+  right: 5px;
+  font-size: 14px;
+  color: #9e9e9e;
+}
 #post-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+#post-writer {
+  position: absolute;
+  bottom: 4px;
+  top: 30px;
+  right: 18px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #9e9e9e;
 }
 </style>

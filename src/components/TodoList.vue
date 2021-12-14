@@ -63,16 +63,16 @@ export default {
   },
   methods: {
     async getTodoList() {
-      const team_id = 19;
-      const member_num = 1;
+      const team_id = this.$route.params.teamId;
+      const member_num = this.$store.state.member.member_num;
       const todos = await getTodoList(team_id, member_num);
       this.todoItems = todos.data;
       console.log(todos.data);
     },
     addTodo: async function () {
       if (this.newTodoItem !== "") {
-        const team_id = 19;
-        const member_num = 1;
+        const team_id = this.$route.params.teamId;
+        const member_num = this.$store.state.member.member_num;
         const todo = {
           todo_title: "할일",
           todo_description: this.newTodoItem,
@@ -90,7 +90,7 @@ export default {
     },
 
     updateOneItem: async function () {
-      const team_id = 19;
+      const team_id = this.$route.params.teamId;
       const todo_num = this.todoItem.todo_num;
       const todo = {
         todo_num: todo_num,
@@ -105,7 +105,7 @@ export default {
     },
 
     removeOneItem: async function (todoItem) {
-      const team_id = 19;
+      const team_id = this.$route.params.teamId;
       const todo_num = todoItem.todo_num;
       const { data } = await deleteTodo(team_id, todo_num);
       console.log(data);

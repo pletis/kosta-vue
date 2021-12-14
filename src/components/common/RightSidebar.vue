@@ -3,28 +3,39 @@
     <div>
       <div class="icon-bar">
         <b-dropdown id="dropdown-dropleft" dropleft text="" class="m-2">
-          <b-dropdown-item href="#">+ 새로운 멤버 초대하기</b-dropdown-item>
+          <b-dropdown-item @click="invite = true"
+            >+ 새로운 멤버 초대하기</b-dropdown-item
+          >
           <b-dropdown-item href="#">팀 전환하기</b-dropdown-item>
           <b-dropdown-item href="/main">잔디 메인으로</b-dropdown-item>
           <b-dropdown-item href="/">로그아웃</b-dropdown-item>
         </b-dropdown>
 
-        <a @click="enter2" class="right-side-bar-item" to="/about">할일</a>
-        <a @click="enter3" class="right-side-bar-item" to="/about">투표</a>
-        <a @click="enter4" class="right-side-bar-item" to="/about">조직</a>
+        <a @click="enter2" class="right-side-bar-item" to="/about"
+          ><font-awesome-icon icon="sticky-note" size="lg" class="mr-2" />
+        </a>
+        <a @click="enter3" class="right-side-bar-item" to="/about"
+          ><font-awesome-icon icon="vote-yea" size="lg" class="mr-2"
+        /></a>
       </div>
-      <div class="search-form" v-if="fade2">
-        <TodoList />
-      </div>
-      <div class="search-form" v-if="fade3"><VoteList /></div>
+      <transition name="fade">
+        <div class="search-form" v-if="fade2">
+          <TodoList />
+        </div>
+      </transition>
+      <transition name="fade">
+        <div class="search-form" v-if="fade3"><VoteList /></div>
+      </transition>
       <div class="search-form" v-if="fade4"><h1>조직</h1></div>
     </div>
+    <inviteModal v-if="invite == true" @invite="invite = false" />
   </div>
 </template>
 
 <script>
 import TodoList from "@/components/TodoList.vue";
 import VoteList from "@/components/VoteList.vue";
+import inviteModal from "@/components/inviteModal.vue";
 export default {
   data() {
     return {
@@ -35,11 +46,13 @@ export default {
       fade2: false,
       fade3: false,
       fade4: false,
+      invite: false,
     };
   },
   components: {
     TodoList,
     VoteList,
+    inviteModal,
   },
   methods: {
     enter: function () {
@@ -107,5 +120,19 @@ export default {
   padding-top: 0;
   border-left: 1px solid rgba(0, 0, 0, 0.1);
   overflow-y: scroll;
+}
+
+.mr-2 {
+  cursor: pointer;
+  color: rgb(35, 127, 0);
+  margin-top: 30px;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 1s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
 }
 </style>

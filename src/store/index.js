@@ -20,6 +20,7 @@ export default new Vuex.Store({
     maindata: {},
     board: {},
     post: {},
+    teamname: "",
   },
   getters: {
     isLogin(state) {
@@ -32,6 +33,12 @@ export default new Vuex.Store({
     },
     setUsername(state, username) {
       state.username = username;
+    },
+    setTeamname(state, teamname) {
+      state.teamname = teamname;
+    },
+    setMember(state, member) {
+      state.member = member;
     },
     clearUser(state) {
       state.user = {};
@@ -72,8 +79,8 @@ export default new Vuex.Store({
       // board_num 은 누른 board
       const board_id = this.state.board.board_num;
       const { data } = await getPostList(team_id, board_id);
-      console.log(data.getListPost);
-      commit("setMaindata", data.getListPost);
+      console.log(data);
+      commit("setMaindata", data);
     },
   },
 });

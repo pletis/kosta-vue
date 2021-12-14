@@ -74,6 +74,7 @@ export default {
       const { data } = await registerUser(userData);
       console.log(data);
       this.initForm();
+      this.$router.push("/login");
     },
     initForm() {
       this.user_name = "";

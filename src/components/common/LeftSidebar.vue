@@ -2,7 +2,7 @@
   <div id="main-page">
     <ChatItemPage v-for="chat in chats" :key="chat.chatRoom_num" :chat="chat" />
     <div class="left">
-      <h3 id="left-title">팀 {{ team_id }}에 접속중</h3>
+      <h3 id="left-title">{{ team_name }}</h3>
 
       <!-- 토픽 헤더 + 추가버튼 -->
       <b-dd-divider></b-dd-divider>
@@ -152,11 +152,21 @@
               <label for="chat_name">채팅방 이름:</label>
               <input id="chat_name" type="text" v-model="chat_name" />
             </div>
+            <div>
+              <label for="chat_name">초대인원:</label>
+              <input id="chat_name" type="text" v-model="selectMember_email" />
+            </div>
+            <inviteChatMember
+              v-for="inviteMember in inviteMembers"
+              :key="inviteMember.user_num"
+              :inviteMember="inviteMember"
+              @memberSelect="memberSelect"
+            />
 
             <button class="my-btn" id="left-button" @click="resetModal">
               취소
             </button>
-            <button type="submit" class="my-btn" @click="updateChatRoom">
+            <button type="submit" class="my-btn" @click="updateChatRoom(chat)">
               수정완료
             </button>
           </form>
@@ -167,7 +177,13 @@
 </template>
 
 <script>
+import {
+  getMembers,
+  getInviteChatMember,
+  inviteChatMembers,
+} from "@/api/member";
 import { createBoard, deleteBoard, updateBoard } from "@/api/board";
+import inviteChatMember from "@/components/inviteChatMember.vue";
 import {
   updateChatRoom,
   createChatRoom,
@@ -191,17 +207,47 @@ export default {
   components: {
     LoadingSpinner,
     ChatItemPage,
+    inviteChatMember,
   },
   methods: {
-    async insertBoard(team_id) {
+    memberSelect: function (member) {
+      this.selectMember = member;
+      this.selectMember_email = member.user.user_email;
+      console.log(this.selectMember);
+    },
+    getMembers: async function () {
+      const team_id = this.$route.params.teamId;
+      const { data } = await getMembers(team_id);
+      console.log(data);
+    },
+    getInviteChatMember: async function (chat) {
+      const team_id = this.$route.params.teamId;
+      const chat_id = chat.chatRoom_num;
+      const { data } = await getInviteChatMember(team_id, chat_id);
+      this.inviteMembers = data;
+      console.log(data);
+    },
+    inviteChatMembers: async function () {
+      const team_id = this.$route.params.teamId;
+      const chat_id = this.chat.chatRoom_num;
+      const invite_data = {
+        chatRoom_num: chat_id,
+        member_num: this.selectMember.member_num,
+      };
+      const { data } = await inviteChatMembers(team_id, chat_id, invite_data);
+      console.log(data);
+    },
+    async insertBoard() {
       try {
+        const team_id = this.team_id;
+        const member_num = this.$store.state.member.member_num;
         // 1초 지연 주어 스피너 보여주기
         var start = new Date().getTime();
         this.isLoading = true;
         const boardData = {
           board_name: this.board_name,
           board_info: this.board_info,
-          member_num: this.member_num,
+          member_num: member_num,
         };
         const { data } = await createBoard(team_id, boardData);
         console.log(data);
@@ -237,21 +283,17 @@ export default {
       }
     },
     async deleteItem(board) {
-      try {
-        // 1초 지연 주어 스피너 보여주기
-        var start = new Date().getTime();
-        this.isLoading = true;
-        const team_id = this.team_id;
-        const board_id = board.board_num;
-        const { data } = await deleteBoard(team_id, board_id);
-        console.log(data);
-        this.$emit("boardlist");
-        // 1초 지연 실행
-        while (new Date().getTime() < start + 1000);
-        this.isLoading = false;
-      } catch (error) {
-        console.log(error);
-      }
+      // 1초 지연 주어 스피너 보여주기
+      var start = new Date().getTime();
+      this.isLoading = true;
+      const team_id = this.team_id;
+      const board_id = board.board_num;
+      const { data } = await deleteBoard(team_id, board_id);
+      console.log(data);
+      this.$emit("boardlist");
+      // 1초 지연 실행
+      while (new Date().getTime() < start + 1000);
+      this.isLoading = false;
     },
 
     async deleteChatRoom(chat) {
@@ -299,7 +341,7 @@ export default {
       this.board_info = "";
     },
 
-    async updateChatRoom() {
+    async updateChatRoom(chat) {
       try {
         this.isModal4 = false;
         // 1초 지연 주어 스피너 보여주기
@@ -318,6 +360,7 @@ export default {
         );
         console.log(data);
         this.$emit("chatRoomlist");
+        this.inviteChatMembers(chat);
         // 1초 지연 실행
         while (new Date().getTime() < start + 1000);
         this.resetModal();
@@ -327,15 +370,27 @@ export default {
       }
     },
 
+    closeChatRoom: function () {
+      console.log("close");
+      this.chats = [];
+    },
+
     //모달 메소드
     updateBoardModal(board) {
-      this.isModal = true;
-      this.board_name = board.board_name;
-      this.board_info = board.board_info;
-      this.board_num = board.board_num;
+      if (this.member_num == board.member_num) {
+        this.isModal = true;
+        this.board_name = board.board_name;
+        this.board_info = board.board_info;
+        this.board_num = board.board_num;
+      } else {
+        alert("권한이 없습니다.");
+      }
     },
 
     updateChatModal(chat) {
+      // this.getMembers();
+      this.getInviteChatMember(chat);
+      this.chat = chat;
       this.isModal4 = true;
       this.chat_name = chat.chatRoom_name;
       this.chat_num = chat.chatRoom_num;
@@ -358,7 +413,7 @@ export default {
 
     submitForm2() {
       // 값이 유효하면 서버에 요청
-      this.insertBoard(this.team_id);
+      this.insertBoard();
       this.isModal2 = false;
       this.$nextTick(() => {
         this.$bvModal.hide("modal-prevent-closing");
@@ -372,7 +427,8 @@ export default {
   data() {
     return {
       team_id: this.$route.params.teamId,
-      member_num: 1,
+      team_name: this.$store.state.teamname,
+      member_num: this.$store.state.member.member_num,
       board_num: "",
       board_name: "",
       board_info: "",
@@ -387,6 +443,10 @@ export default {
       isModal4: false,
       isModal5: false,
       chats: [],
+      chat: [],
+      inviteMembers: "",
+      selectMember: "",
+      selectMember_email: "",
     };
   },
 };
